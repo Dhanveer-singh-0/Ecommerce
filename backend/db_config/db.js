@@ -32,7 +32,7 @@ const createDB = () => {
     "CREATE TABLE IF NOT EXISTS users(user_id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(25), email VARCHAR(50) UNIQUE, password VARCHAR(50), type VARCHAR(8))";
 
   let productdb =
-    "CREATE TABLE IF NOT EXISTS products ( user_id INT, product_id INT AUTO_INCREMENT PRIMARY KEY, target VARCHAR(8), category VARCHAR(15), available INT(5), base_price INT(7), discount INT(3), description VARCHAR(200), img MEDIUMBLOB, status ENUM('active', 'inactive') DEFAULT 'active', FOREIGN KEY (user_id) REFERENCES users(user_id))";
+    "CREATE TABLE IF NOT EXISTS products ( user_id INT,product_id INT AUTO_INCREMENT PRIMARY KEY,brand VARCHAR(100), target VARCHAR(8), category VARCHAR(15), available INT(5), base_price INT(7), discount INT(3), description VARCHAR(200), img MEDIUMBLOB, status ENUM('active', 'inactive') DEFAULT 'active', FOREIGN KEY (user_id) REFERENCES users(user_id))";
 
   let cartdb =
     "CREATE TABLE IF NOT EXISTS carts(cart_id INT AUTO_INCREMENT PRIMARY KEY, user_id INT, product_id INT, FOREIGN KEY (user_id) REFERENCES users(user_id), FOREIGN KEY (product_id) REFERENCES products(product_id))";
@@ -80,7 +80,7 @@ const isuserexist = async (email) => {
   });
 };
 const is_user_valid = async (email, password) => {
-  let qry = "select password from users where email=?";
+  let qry = "select * from users where email=?";
 
   return new Promise((resolve, reject) => {
     db.query(qry, [email], (err, result) => {
@@ -88,11 +88,12 @@ const is_user_valid = async (email, password) => {
         console.log("Error checking credentials:", email, err);
         reject(false);
       }
+      console.log(result);
 
       if (result.length === 0)
         reject({ status: false, message: "User not exist.." });
       else if (password === result[0].password)
-        resolve({ status: true, message: "correct password" });
+        resolve({ status: true, user: result[0] });
 
       reject({ status: false, message: "Incorrect password" });
     });
@@ -118,7 +119,7 @@ const register_user = (user) => {
 };
 const addproduct = async (product) => {
   let qry =
-    "insert into products(user_id, target, category, available, base_price, discount, description) values(?,?,?,?,?,?,?)";
+    "insert into products(user_id, target, category, available, base_price, discount, description,brand) values(?,?,?,?,?,?,?,?)";
 
   return new Promise((resolve, reject) => {
     db.query(
@@ -131,6 +132,7 @@ const addproduct = async (product) => {
         product.base_price,
         product.discount,
         product.description,
+        product.brand,
       ],
       (err, result) => {
         if (err) {
@@ -168,7 +170,9 @@ const get_data_by_id = async (params) => {
   return new Promise((resolve) => {
     db.query(qry, (err, res) => {
       if (err) console.log("Error fetching by id:", err);
-      else resolve(res);
+      else {
+        resolve(res[0]);
+      }
     });
   });
 };

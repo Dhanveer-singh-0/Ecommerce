@@ -2,14 +2,41 @@ import BannerSlider from "@/components/BannerSlider";
 import Navbar from "@/components/Navbar";
 import ProductCard from "@/components/ProductCard";
 import React, { useState, useEffect } from "react";
-import shirt from "../assets/shirt.webp";
-import shirt2 from "../assets/shirt2.webp";
-import shirt3 from "../assets/shirt3.webp";
-import shirt4 from "../assets/shirt4.webp";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+import { useLocation, useNavigate } from "react-router-dom";
+function Home({ allProducts, setAllProducts }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const activeUser = location.state?.userDetail;
+  // console.log(user);
 
-function Home(user) {
-  const [allProducts, setAllProducts] = useState([]);
+  const handleViewProduct = (product) => {
+    navigate("/viewProduct", { state: { product } });
+  };
+  const addToWishlist = async (product) => {
+    try {
+      let url = `http://localhost:5000/users/${activeUser.user_id}/wishlists/${product.product_id}`;
+      const result = await axios.post(url);
+
+      console.log(result);
+    } catch (error) {
+      console.log("Error in adding to wishlist: ", error);
+    }
+  };
+  const removeFromWishlist = (product) => {
+    navigate("/viewProduct", { state: { product } });
+  };
+  const addToCart = async (product) => {
+    try {
+      let url = `http://localhost:5000/users/${activeUser.user_id}/carts/${product.product_id}`;
+      const result = await axios.post(url);
+
+      console.log(result);
+    } catch (error) {
+      console.log("Error in add to card: ", error);
+    }
+  };
   useEffect(() => {
     async function getAllProducts() {
       try {
@@ -20,25 +47,24 @@ function Home(user) {
         console.log("Error in fetching products: ", error);
       }
     }
+
     getAllProducts();
   }, []);
 
   return (
-    <div className="text-[30px] bg-gradient-to-l from-[#141414] to-[#0c2025] text-white/90 ">
-      <Navbar />
+    <div className="text-[30px] bg-gradient-to-l from-[#141414] to-[#0c2025] text-white/90 pt-2">
       <BannerSlider />
 
       <div className="p-4 flex flex-wrap justify-center">
         {allProducts.map((product) => {
-          console.log(product);
-
           return (
             <ProductCard
-              title={product.title}
-              image={shirt}
-              description={product.description}
-              price={product.price}
-              available={product.available}
+              product={product}
+              key={uuidv4()}
+              handleViewProduct={handleViewProduct}
+              addToWishlist={addToWishlist}
+              removeFromWishlist={removeFromWishlist}
+              addToCart={addToCart}
             />
           );
         })}
@@ -51,7 +77,6 @@ function Home(user) {
           available="5"
         /> */}
       </div>
-      {console.log(allProducts)}
     </div>
   );
 }

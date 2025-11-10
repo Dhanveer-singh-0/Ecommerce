@@ -19,8 +19,6 @@ export const register = async (req, resp) => {
   resp.status(403).send("Error on server !");
 };
 export const is_user_valid = async (req, resp) => {
-  console.log("is user valid");
-
   const { email, password, type } = req.body;
   const user = { email, password, type };
   let userexist;
@@ -29,8 +27,6 @@ export const is_user_valid = async (req, resp) => {
     resp.status(200).send(userexist);
     return;
   } catch (err) {
-    console.log(err);
-
     resp.status(409).send(err);
     return;
   }
@@ -40,17 +36,24 @@ export const is_user_valid = async (req, resp) => {
 
 //get user or product via id or via section(cart,wish,order)
 export const get_all_user_or_product = async (req, resp) => {
-  let tb = req.params.type.toUpperCase();
+  let tb = req.params.type;
+  console.log(req.params);
+
   let result;
   if (req.params.id) {
     if (req.params.section) {
       result = await db.get_data_by_id_section(req.params);
+      console.log(result);
 
       let all_pdetails = await Promise.all(
         result.map((ele) => {
-          return db.get_data_by_id({ type: "PRODUCTS", id: ele.PRODUCT_ID });
+          return db.get_data_by_id({ type: "products", id: ele.product_id });
         })
       );
+      console.log(".................");
+
+      console.log(all_pdetails[0]);
+
       resp.status(200).send(all_pdetails);
       return;
     }
@@ -69,6 +72,7 @@ export const add_product = async (req, resp) => {
     base_price,
     discount,
     description,
+    brand,
   } = req.body;
   const product = {
     user_id,
@@ -78,6 +82,7 @@ export const add_product = async (req, resp) => {
     base_price,
     discount,
     description,
+    brand,
   };
   try {
     await db.addproduct(product);

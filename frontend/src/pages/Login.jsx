@@ -1,33 +1,30 @@
 import React, { useState } from "react";
 import Logo from "../assets/cart2.png";
-
-// import Logo from "../assets/cart.png";
 import google from "../assets/google.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert2";
 
-function Login() {
-  let [user, setuser] = useState({
+function Login({ activeUser, setActiveUser }) {
+  let [user, setUser] = useState({
     email: "",
     password: "",
     type: "buyer",
   });
   let handleuser = (event) => {
-    setuser({ ...user, [event.target.name]: event.target.value });
-    console.log(event.target.value);
+    setUser({ ...user, [event.target.name]: event.target.value });
   };
   let handlesubmit = async (event) => {
     event.preventDefault();
 
     try {
-      console.log(user);
-
       const result = await axios.post(
         "http://localhost:5000/checkcredentials",
         user
       );
-      console.log("Result: ", result.data);
+      const userDetail = result.data.user;
+      console.log("Result: ", userDetail);
+      setActiveUser(userDetail);
       swal
         .fire({
           title: "Welcone to OneCart",
@@ -35,9 +32,18 @@ function Login() {
           confirmButtonText: "Explore OneCart",
         })
         .then((res) => {
-          navigate("/home");
+          navigate("/home", { state: { userDetail } });
         });
     } catch (err) {
+      swal
+        .fire({
+          title: "Incorrect mail or password !",
+          icon: "error",
+          confirmButtonText: "Try again.. ",
+        })
+        .then((res) => {
+          navigate("/login");
+        });
       console.log("Error in login: ", err);
     }
   };
@@ -45,10 +51,7 @@ function Login() {
   let navigate = useNavigate();
   return (
     <div className="w-[100vw] h-[100vh] bg-gradient-to-l from-[#141414] to-[#0c2025] text-[white] flex flex-col items-center justify-start">
-      <div
-        className="w-[100%] h-[80px] flex items-center justify-start px-[30px] gap-[10px] cursor-pointer"
-        onClick={() => navigate("/")}
-      >
+      <div className="w-[100%] h-[80px] flex items-center justify-start px-[30px] gap-[10px] cursor-pointer">
         <img src={Logo} className="w-[60px]" alt="" />
         <h1 className="text-2xl font-[monospace]"> OneCart</h1>
       </div>
