@@ -13,7 +13,7 @@ const images = [slider1, slider2];
 
 export default function BannerSlider() {
   return (
-    <div className="w-full max-w-[1200px] mx-auto mt-4">
+    <div className="w-full  mx-auto mt-4">
       <Swiper
         modules={[Autoplay, Navigation, Pagination]}
         navigation={true}
@@ -27,7 +27,7 @@ export default function BannerSlider() {
             <img
               src={src}
               alt={`Slide ${index + 1}`}
-              className="w-full h-64 md:h-96 object-cover rounded-lg"
+              className="w-full  md:h-96 object-contain rounded-lg"
             />
           </SwiperSlide>
         ))}

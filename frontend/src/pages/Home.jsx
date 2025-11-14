@@ -5,12 +5,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { useLocation, useNavigate } from "react-router-dom";
-function Home({ allProducts, setAllProducts }) {
+function Home() {
+  const [allProducts, setAllProducts] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
   const activeUser = location.state?.userDetail;
-  // console.log(user);
-
+  const filter = location.state?.filter;
   const handleViewProduct = (product) => {
     navigate("/viewProduct", { state: { product } });
   };
@@ -38,15 +38,14 @@ function Home({ allProducts, setAllProducts }) {
     }
   };
   useEffect(() => {
-    async function getAllProducts() {
+    const getAllProducts = async () => {
       try {
         const result = await axios.get("http://localhost:5000/products");
-        // console.log(result.data);
         setAllProducts(result.data);
       } catch (error) {
         console.log("Error in fetching products: ", error);
       }
-    }
+    };
 
     getAllProducts();
   }, []);
@@ -54,29 +53,29 @@ function Home({ allProducts, setAllProducts }) {
   return (
     <div className="text-[30px] bg-gradient-to-l from-[#141414] to-[#0c2025] text-white/90 pt-2">
       <BannerSlider />
-
       <div className="p-4 flex flex-wrap justify-center">
-        {allProducts.map((product) => {
-          return (
-            <ProductCard
-              product={product}
-              key={uuidv4()}
-              handleViewProduct={handleViewProduct}
-              addToWishlist={addToWishlist}
-              removeFromWishlist={removeFromWishlist}
-              addToCart={addToCart}
-            />
-          );
-        })}
+        {allProducts
+          .filter((product) => {
+            console.log(filter);
 
-        {/* <ProductCard
-          title="U.S. POLO ASSN."
-          image={shirt}
-          description="2714 Men's Super Combed Cotton Rich Solid Round Neck Regular Fit Half Sleeve T-Shirt"
-          price="550"
-          available="5"
-        /> */}
+            if (!filter) return true;
+            if (filter === "all") return true;
+            return product.target.toLowerCase() === filter;
+          })
+          .map((product) => {
+            return (
+              <ProductCard
+                product={product}
+                key={uuidv4()}
+                handleViewProduct={handleViewProduct}
+                addToWishlist={addToWishlist}
+                removeFromWishlist={removeFromWishlist}
+                addToCart={addToCart}
+              />
+            );
+          })}
       </div>
+      {console.log(allProducts)}
     </div>
   );
 }

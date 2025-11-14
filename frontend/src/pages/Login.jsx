@@ -7,8 +7,8 @@ import swal from "sweetalert2";
 
 function Login({ activeUser, setActiveUser }) {
   let [user, setUser] = useState({
-    email: "",
-    password: "",
+    email: "dhanveer@gmail.com",
+    password: "password",
     type: "buyer",
   });
   let handleuser = (event) => {

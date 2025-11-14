@@ -17,7 +17,11 @@ export default function ProductCard({
       className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 w-70 h-125 m-5 cursor-pointer"
       onClick={() => handleViewProduct(product)}
     >
-      <img src={image} alt={"title"} className="w-full h-70 object-contain" />
+      <img
+        src={product.img}
+        alt={"title"}
+        className="w-full h-70 object-contain"
+      />
       <div className="p-4">
         <h2 className="text-lg font-bold text-black">{product.brand}</h2>
         <p className="text-sm text-gray-800">{product.description}</p>

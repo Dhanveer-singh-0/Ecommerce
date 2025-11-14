@@ -28,13 +28,25 @@ export default function Navbar({ activeUser }) {
         </div>
 
         <div className="hidden md:flex items-center gap-4 text-lg">
-          <Link to="home" className="hover:text-gray-200">
+          <Link
+            to="home"
+            state={{ filter: "men" }}
+            className="hover:text-gray-200"
+          >
             Men
           </Link>
-          <Link to="/home" className="hover:text-gray-200">
+          <Link
+            to="/home"
+            state={{ filter: "women" }}
+            className="hover:text-gray-200"
+          >
             Women
           </Link>
-          <Link to="/home" className="hover:text-gray-200">
+          <Link
+            to="/home"
+            state={{ filter: "kids" }}
+            className="hover:text-gray-200"
+          >
             Kids
           </Link>
           <Link to="/wishlist">
@@ -58,13 +70,25 @@ export default function Navbar({ activeUser }) {
 
       {menuOpen && (
         <div className="md:hidden mt-2 border-t border-blue-500 pt-2 flex flex-col gap-2">
-          <Link to="" className="hover:text-gray-200">
+          <Link
+            to="/home"
+            state={{ filter: "men" }}
+            className="hover:text-gray-200"
+          >
             Men
           </Link>
-          <Link to="" className="hover:text-gray-200">
+          <Link
+            to="/home"
+            state={{ filter: "women" }}
+            className="hover:text-gray-200"
+          >
             Women
           </Link>
-          <Link to="" className="hover:text-gray-200">
+          <Link
+            to="/home"
+            state={{ filter: "kids" }}
+            className="hover:text-gray-200"
+          >
             Kid
           </Link>
           <div className="flex items-center gap-4 mt-1">

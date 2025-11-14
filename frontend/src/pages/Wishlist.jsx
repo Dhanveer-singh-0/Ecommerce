@@ -4,7 +4,8 @@ import image from "../assets/shirt.webp";
 import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
 
-export default function Wishlist({ activeUser, wishlist, setWishlist }) {
+export default function Wishlist({ activeUser }) {
+  const [wishlist, setWishlist] = useState([]);
   useEffect(() => {
     async function getAllProductsFromCart() {
       try {
@@ -59,12 +60,10 @@ export default function Wishlist({ activeUser, wishlist, setWishlist }) {
             key={uuidv4()}
             className="flex bg-white/10 shadow-lg rounded-xl overflow-hidden backdrop-blur-lg"
           >
-            {/* Image Section */}
-            <div className="w-1/4 flex items-center justify-center bg-black/20">
-              <img src={image} className="w-full h-40 object-contain p-3" />
+            <div className="w-1/4 flex items-center justify-center bg-white/100 ">
+              <img src={image} className="h-57 object-contain rounded-xl " />
             </div>
 
-            {/* Details Section */}
             <div className="w-3/4 p-4">
               <h2 className="text-xl font-semibold">{item.brand}</h2>
               <p className="text-sm text-gray-300">{item.description}</p>

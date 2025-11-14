@@ -64,27 +64,33 @@ export const get_all_user_or_product = async (req, resp) => {
 };
 
 export const add_product = async (req, resp) => {
-  const {
-    user_id,
-    target,
-    category,
-    available,
-    base_price,
-    discount,
-    description,
-    brand,
-  } = req.body;
-  const product = {
-    user_id,
-    target,
-    category,
-    available,
-    base_price,
-    discount,
-    description,
-    brand,
-  };
   try {
+    const {
+      user_id,
+      target,
+      category,
+      available,
+      base_price,
+      discount,
+      description,
+      brand,
+    } = req.body;
+    let imageUrl = null;
+    if (req.file) {
+      imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+    }
+    const product = {
+      user_id,
+      target,
+      category,
+      available,
+      base_price,
+      discount,
+      description,
+      brand,
+      img: imageUrl,
+    };
+
     await db.addproduct(product);
     resp.status(200).send("Product addes successfully !!");
     return;

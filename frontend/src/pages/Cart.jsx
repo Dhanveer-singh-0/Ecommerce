@@ -4,7 +4,8 @@ import image from "../assets/shirt.webp";
 import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
 
-export default function Cart({ activeUser, cartItems, setCartItems }) {
+export default function Cart({ activeUser }) {
+  const [cartItems, setCartItems] = useState([]);
   useEffect(() => {
     async function getAllProductsFromCart() {
       try {
@@ -76,11 +77,11 @@ export default function Cart({ activeUser, cartItems, setCartItems }) {
             className="flex bg-white/10 shadow-lg rounded-xl overflow-hidden backdrop-blur-lg"
           >
             {/* Image Section */}
-            <div className="w-1/4 h-60 flex items-center justify-center bg-black/20">
+            <div className="w-1/4 h-60 flex items-center justify-center bg-white">
               <img
                 src={image}
                 alt="title"
-                className="w-full h-55 object-contain "
+                className="w-full h-60 object-contain "
               />
             </div>
 

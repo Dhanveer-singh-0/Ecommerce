@@ -118,8 +118,9 @@ const register_user = (user) => {
   });
 };
 const addproduct = async (product) => {
+  const image = product.image ? product.image : null;
   let qry =
-    "insert into products(user_id, target, category, available, base_price, discount, description,brand) values(?,?,?,?,?,?,?,?)";
+    "insert into products(user_id, target, category, available, base_price, discount, description,brand,img) values(?,?,?,?,?,?,?,?,?)";
 
   return new Promise((resolve, reject) => {
     db.query(
@@ -133,6 +134,7 @@ const addproduct = async (product) => {
         product.discount,
         product.description,
         product.brand,
+        product.img,
       ],
       (err, result) => {
         if (err) {
@@ -155,7 +157,9 @@ const getall = async (type) => {
   return new Promise((resolve, reject) => {
     db.query(qry, (err, res) => {
       if (err) console.log("Error fetching", table, err);
-      else resolve(res);
+      else {
+        resolve(res);
+      }
     });
   });
 };
