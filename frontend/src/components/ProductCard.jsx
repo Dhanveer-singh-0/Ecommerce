@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Heart } from "lucide-react";
-import image from "../assets/shirt.webp";
 import Swal from "sweetalert2";
 
 export default function ProductCard({
@@ -9,6 +8,7 @@ export default function ProductCard({
   addToWishlist,
   removeFromWishlist,
   addToCart,
+  isWish,
 }) {
   const [liked, setLiked] = useState(false);
 
@@ -43,18 +43,20 @@ export default function ProductCard({
           <button
             onClick={(event) => {
               event.stopPropagation();
-              setLiked(!liked);
-              addToWishlist(product);
+
+              console.log(product, isWish);
+              if (isWish) removeFromWishlist(product);
+              else addToWishlist(product);
             }}
             className="p-2 rounded-full border hover:bg-red-100 transition-colors"
           >
             <Heart
               className={`w-6 h-6 ${
-                liked ? "text-red-500 fill-red-500" : "text-gray-400"
+                isWish ? "text-red-500 fill-red-500" : "text-gray-400"
               }`}
             />
           </button>
-
+          {console.log(isWish)}
           <button
             className="flex-1 bg-blue-600 text-white text-sm py-1.5 rounded-md hover:bg-blue-700 transition-colors"
             onClick={(event) => {

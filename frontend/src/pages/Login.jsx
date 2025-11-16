@@ -25,14 +25,16 @@ function Login({ activeUser, setActiveUser }) {
       const userDetail = result.data.user;
       console.log("Result: ", userDetail);
       setActiveUser(userDetail);
-      swal
-        .fire({
-          title: "Welcone to OneCart",
-          icon: "success",
-          confirmButtonText: "Explore OneCart",
-        })
-        .then((res) => {
-          navigate("/home", { state: { userDetail } });
+
+      if (userDetail.type == user.type) {
+        userDetail.type === "buyer"
+          ? navigate("/home", { state: { userDetail } })
+          : navigate("/uploadproduct", { state: { userDetail } });
+      } else
+        swal.fire({
+          title: "Role doesn't match !!!",
+          icon: "error",
+          confirmButtonText: "Try again.. ",
         });
     } catch (err) {
       swal
@@ -89,6 +91,22 @@ function Login({ activeUser, setActiveUser }) {
               value={user.password}
               onChange={handleuser}
             />
+            <select
+              className="w-[100%] h-[50px] bg-[#00000025] border-[2px] border-[#96969635] backdrop:blur-sm rounded-lg shadow-lg bg-transparent placeholder-[#ffffffc7] px-[20px] font-semibold"
+              name="type"
+              value={user.type}
+              onChange={handleuser}
+            >
+              <option
+                value="buyer"
+                className="text-[white] bg-[#0B1B1E] border-[2px] border-[#96969635] rounded-lg "
+              >
+                Buyer
+              </option>
+              <option value="seller" className="text-[white] bg-[#0B1B1E]">
+                Seller
+              </option>
+            </select>
 
             <button className="w-[100%] h-[50px] bg-[#6060f5] rounded-lg  flex items-center justify-center mt-[20px] text-[17px] font-semibold hover:bg-[#6060d5]">
               Login

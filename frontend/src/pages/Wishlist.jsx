@@ -1,25 +1,9 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import image from "../assets/shirt.webp";
 import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
 
-export default function Wishlist({ activeUser }) {
-  const [wishlist, setWishlist] = useState([]);
-  useEffect(() => {
-    async function getAllProductsFromCart() {
-      try {
-        let url = `http://localhost:5000/users/${activeUser.user_id}/wishlists`;
-        const result = await axios.get(url);
-        console.log(url);
-        setWishlist(result.data);
-      } catch (error) {
-        console.log("Error in fetching products: ", error);
-      }
-    }
-    getAllProductsFromCart();
-    console.log(wishlist);
-  }, []);
+export default function Wishlist({ wishlist, setWishlist, activeUser }) {
   const addToCart = async (product) => {
     try {
       let url = `http://localhost:5000/users/${activeUser.user_id}/carts/${product.product_id}`;
@@ -33,6 +17,19 @@ export default function Wishlist({ activeUser }) {
       console.log("Error in add to card: ", error);
     }
   };
+  useEffect(() => {
+    async function loadWishlist() {
+      try {
+        let url = `http://localhost:5000/users/${activeUser.user_id}/wishlists`;
+        const result = await axios.get(url);
+        setWishlist(result.data);
+      } catch (error) {
+        console.log("Error in fetching products: ", error);
+      }
+    }
+
+    loadWishlist();
+  }, []);
 
   const removeFromWishlist = async (product) => {
     try {
@@ -61,7 +58,7 @@ export default function Wishlist({ activeUser }) {
             className="flex bg-white/10 shadow-lg rounded-xl overflow-hidden backdrop-blur-lg"
           >
             <div className="w-1/4 flex items-center justify-center bg-white/100 ">
-              <img src={image} className="h-57 object-contain rounded-xl " />
+              <img src={item.img} className="h-57 object-contain rounded-xl " />
             </div>
 
             <div className="w-3/4 p-4">
